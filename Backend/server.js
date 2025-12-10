@@ -2,21 +2,21 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/db");
-const path = require("path");
 
 const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
+// Connect DB
 connectDB();
 
+// Routes
 app.use("/api/companies", require("./routes/companyRoutes"));
 
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
-});
+// Do NOT serve React build here when using Vercel
+// REMOVE ALL STATIC FRONTEND CODE
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
